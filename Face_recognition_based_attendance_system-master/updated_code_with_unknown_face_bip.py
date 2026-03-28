@@ -21,7 +21,7 @@ import winsound
 
 
 # ======================
-# SOUND ALERT FUNCTION 
+# SOUND ALERT FUNCTION
 # ======================
 def play_alert():
     """
@@ -413,14 +413,14 @@ def send_absence_notification(parent_email, student_name, date):
     """
     Sends absence notification emails
     """
-    sender_email = "m.nikhil1138@gmail.com"
-    sender_password = "gslh vbjl xzfn tdsx"
-    
+    sender_email = "your-email@example.com"
+    sender_password = "abcd efgh ijhk lmno"  # Use an app password if using Gmail with 2FA
+
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = parent_email
     message["Subject"] = f"Absence Notification for {student_name}"
-    
+
     body = f"""
     Dear Parent/Guardian,
     
@@ -431,9 +431,9 @@ def send_absence_notification(parent_email, student_name, date):
     Sincerely,
     College Administration
     """
-    
+
     message.attach(MIMEText(body, "plain"))
-    
+
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()

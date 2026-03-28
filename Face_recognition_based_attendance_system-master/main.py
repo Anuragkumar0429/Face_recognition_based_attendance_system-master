@@ -305,8 +305,8 @@ def getImagesAndLabels(path):
 
 def send_absence_notification(parent_email, student_name, date):
     # Email configuration - replace with your actual credentials
-    sender_email = "m.nikhil1138@gmail.com"
-    sender_password = "gslh vbjl xzfn tdsx"
+    sender_email = "your-email@example.com"
+    sender_password = "abcd efgh ijhk lmno"  # Use an app password if using Gmail with 2FA
     
     # Create message
     message = MIMEMultipart()
