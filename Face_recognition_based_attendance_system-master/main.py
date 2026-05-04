@@ -1,49 +1,117 @@
+# ======================
+# IMPORTS
+# ======================
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mess
 import tkinter.simpledialog as tsd
-import cv2, os
+import cv2
+import os
 import csv
 import numpy as np
 from PIL import Image
 import pandas as pd
 import datetime
 import time
-import re  # For email validation
+import re
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import sys
+import platform
 
-############################################# FUNCTIONS ################################################
+# Import winsound only on Windows
+try:
+    import winsound
+except ImportError:
+    winsound = None
 
+
+# ======================
+# SOUND ALERT FUNCTION
+# ======================
+def play_alert():
+    """
+    Plays a beep sound when unknown face is detected
+    Works on Windows systems with winsound
+    """
+    try:
+        if winsound is not None:
+            winsound.Beep(1000, 300)  # Frequency 1000Hz, Duration 300ms
+        else:
+            print("Sound alert not available on this system")
+    except:
+        print("Sound alert not available on this system")
+
+
+# ======================
+# PATH MANAGEMENT
+# ======================
 def assure_path_exists(path):
+    """
+    Creates directory if it doesn't exist
+    """
     dir = os.path.dirname(path)
     if not os.path.exists(dir):
         os.makedirs(dir)
 
+
+# ======================
+# TIME/CLOCK FUNCTIONS
+# ======================
 def tick():
+    """
+    Updates the live clock display
+    """
     time_string = time.strftime('%H:%M:%S')
     clock.config(text=time_string)
     clock.after(200, tick)
 
+
+# ======================
+# CONTACT INFORMATION
+# ======================
 def contact():
+    """
+    Displays contact information
+    """
     mess._show(title='Contact us', message="Please contact us on: 'm.nikhil1138@gmail.com'")
 
+
+# ======================
+# FILE VALIDATION
+# ======================
 def check_haarcascadefile():
+    """
+    Verifies haarcascade file exists
+    """
     exists = os.path.isfile("haarcascade_frontalface_default.xml")
-    if exists:
-        pass
-    else:
+    if not exists:
         mess._show(title='Some file missing', message='Please contact us for help')
         window.destroy()
 
+
+# ======================
+# EMAIL VALIDATION
+# ======================
 def is_valid_email(email):
+    """
+    Validates email format using regex
+    """
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email)
 
+
+# ======================
+# PASSWORD MANAGEMENT
+# ======================
 def save_pass():
+    """
+    Saves or updates password
+    """
     assure_path_exists("TrainingImageLabel/")
     exists1 = os.path.isfile("TrainingImageLabel/psd.txt")
+    
     if exists1:
         tf = open("TrainingImageLabel/psd.txt", "r")
         key = tf.read()
@@ -57,9 +125,11 @@ def save_pass():
             tf.write(new_pas)
             mess._show(title='Password Registered', message='New password was registered successfully!!')
             return
+    
     op = old.get()
     newp = new.get()
     nnewp = nnew.get()
+    
     if op == key:
         if newp == nnewp:
             txf = open("TrainingImageLabel/psd.txt", "w")
@@ -70,10 +140,18 @@ def save_pass():
     else:
         mess._show(title='Wrong Password', message='Please enter correct old password.')
         return
+    
     mess._show(title='Password Changed', message='Password changed successfully!!')
     master.destroy()
 
+
+# ======================
+# PASSWORD CHANGE UI
+# ======================
 def change_pass():
+    """
+    Password change dialog window
+    """
     global master
     master = tk.Tk()
     master.geometry("400x160")
@@ -109,9 +187,17 @@ def change_pass():
     
     master.mainloop()
 
+
+# ======================
+# PASSWORD VERIFICATION
+# ======================
 def psw():
+    """
+    Handles password verification
+    """
     assure_path_exists("TrainingImageLabel/")
     exists1 = os.path.isfile("TrainingImageLabel/psd.txt")
+    
     if exists1:
         tf = open("TrainingImageLabel/psd.txt", "r")
         key = tf.read()
@@ -124,7 +210,9 @@ def psw():
             tf.write(new_pas)
             mess._show(title='Password Registered', message='New password was registered successfully!!')
             return
+    
     password = tsd.askstring('Password', 'Enter Password', show='*')
+    
     if password == key:
         TrainImages()
     elif password is None:
@@ -132,21 +220,33 @@ def psw():
     else:
         mess._show(title='Wrong Password', message='You have entered wrong password')
 
+
+# ======================
+# CLEAR FUNCTIONS
+# ======================
 def clear():
     txt.delete(0, 'end')
     res = "1)Take Images  >>>  2)Save Profile"
     message1.configure(text=res)
+
 
 def clear2():
     txt2.delete(0, 'end')
     res = "1)Take Images  >>>  2)Save Profile"
     message1.configure(text=res)
 
+
 def clear3():
     txt3.delete(0, 'end')
 
+
+# ======================
+# REGISTRATION COUNTER
+# ======================
 def update_registration_counter():
-    """Function to accurately count and display the total number of registrations"""
+    """
+    Counts and displays total registrations
+    """
     global res
     res = 0
     csv_file = "StudentDetails/StudentDetails.csv"
@@ -155,21 +255,18 @@ def update_registration_counter():
         try:
             with open(csv_file, 'r') as csvFile1:
                 reader1 = csv.reader(csvFile1)
-                # Skip header if it exists
                 try:
-                    next(reader1)  # Skip header row
+                    next(reader1)
                     for row in reader1:
-                        # Only count rows that have at least 3 columns (ID, Name, Email)
                         if len(row) >= 3 and any(field.strip() for field in row):
                             res += 1
                 except StopIteration:
-                    pass  # File is empty except for header
+                    pass
         except Exception as e:
             print(f"Error reading CSV file: {e}")
     else:
         res = 0
     
-    # Update the counter display
     message.config(
         text=f'TOTAL REGISTRATIONS: {res}',
         font=('Roboto', 12, 'bold'),
@@ -182,25 +279,29 @@ def update_registration_counter():
     )
     return res
 
+
+# ======================
+# IMAGE CAPTURE
+# ======================
 def TakeImages():
+    """
+    Captures face images for training
+    """
     check_haarcascadefile()
     columns = ['SERIAL NO.', '', 'ID', '', 'NAME', '', 'PARENT EMAIL']
     assure_path_exists("StudentDetails/")
     assure_path_exists("TrainingImage/")
     
-    # Get the next available serial number
     serial = 0
     csv_file = "StudentDetails/StudentDetails.csv"
     
     if os.path.isfile(csv_file):
         with open(csv_file, 'r') as csvFile:
             reader = csv.reader(csvFile)
-            # Skip header if it exists
             try:
                 next(reader)
-                # Find the highest existing serial number
                 for row in reader:
-                    if row and len(row) > 0:  # Check if row is not empty
+                    if row and len(row) > 0:
                         try:
                             current_serial = int(row[0])
                             if current_serial > serial:
@@ -208,14 +309,13 @@ def TakeImages():
                         except (ValueError, IndexError):
                             continue
             except StopIteration:
-                pass  # File is empty except for header
+                pass
     else:
-        # File doesn't exist, create it with header
         with open(csv_file, 'w', newline='') as csvFile1:
             writer = csv.writer(csvFile1)
             writer.writerow(columns)
     
-    serial += 1  # Next available serial number
+    serial += 1
     
     Id = txt.get().strip()
     name = txt2.get().strip()
@@ -243,6 +343,7 @@ def TakeImages():
             ret, img = cam.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             faces = detector.detectMultiScale(gray, 1.3, 5)
+            
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 sampleNum += 1
@@ -260,17 +361,21 @@ def TakeImages():
         res = f"Images Taken for ID: {Id}"
         row = [serial, '', Id, '', name, '', parent_email]
         
-        # Write to CSV file
         with open(csv_file, 'a', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
         
         message1.configure(text=res)
-        update_registration_counter()  # Update the counter display
-    else:
-        mess._show(title='Error', message='Please fill all fields')
+        update_registration_counter()
 
+
+# ======================
+# MODEL TRAINING
+# ======================
 def TrainImages():
+    """
+    Trains the face recognition model
+    """
     check_haarcascadefile()
     assure_path_exists("TrainingImageLabel/")
     recognizer = cv2.face.LBPHFaceRecognizer.create()
@@ -287,9 +392,16 @@ def TrainImages():
     recognizer.save("TrainingImageLabel/Trainner.yml")
     res = "Profile Saved Successfully"
     message1.configure(text=res)
-    update_registration_counter()  # Update the counter display
+    update_registration_counter()
 
+
+# ======================
+# IMAGE PROCESSING
+# ======================
 def getImagesAndLabels(path):
+    """
+    Processes training images
+    """
     imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
     faces = []
     Ids = []
@@ -303,18 +415,22 @@ def getImagesAndLabels(path):
     
     return faces, Ids
 
+
+# ======================
+# EMAIL NOTIFICATIONS
+# ======================
 def send_absence_notification(parent_email, student_name, date):
-    # Email configuration - replace with your actual credentials
+    """
+    Sends absence notification emails
+    """
     sender_email = "your-email@example.com"
     sender_password = "abcd efgh ijhk lmno"  # Use an app password if using Gmail with 2FA
-    
-    # Create message
+
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = parent_email
     message["Subject"] = f"Absence Notification for {student_name}"
-    
-    # Email body
+
     body = f"""
     Dear Parent/Guardian,
     
@@ -325,11 +441,10 @@ def send_absence_notification(parent_email, student_name, date):
     Sincerely,
     College Administration
     """
-    
+
     message.attach(MIMEText(body, "plain"))
-    
+
     try:
-        # Send email (using Gmail SMTP as example)
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(sender_email, sender_password)
@@ -338,8 +453,14 @@ def send_absence_notification(parent_email, student_name, date):
     except Exception as e:
         print(f"Failed to send email to {parent_email}: {str(e)}")
 
+
+# ======================
+# ABSENCE MARKING
+# ======================
 def mark_absent_students():
-    """Function to mark absent students and send notifications"""
+    """
+    Marks absent students and sends notifications
+    """
     today = datetime.datetime.now().strftime('%d-%m-%Y')
     attendance_file = f"Attendance/Attendance_{today}.csv"
     
@@ -347,7 +468,6 @@ def mark_absent_students():
         mess._show(title='No Attendance', message='No attendance taken today!')
         return
     
-    # Read all student details to get emails
     student_details = {}
     if os.path.isfile("StudentDetails/StudentDetails.csv"):
         df = pd.read_csv("StudentDetails/StudentDetails.csv")
@@ -361,17 +481,15 @@ def mark_absent_students():
                     'email': parent_email
                 }
     
-    # Read attendance file and find absent students
     absent_students = []
     with open(attendance_file, 'r') as f:
         reader = csv.reader(f)
-        next(reader)  # Skip header
+        next(reader)
         for row in reader:
-            if len(row) >= 3:  # Ensure row has enough columns
+            if len(row) >= 3:
                 student_id = row[0].strip()
                 status = row[2].strip() if len(row) > 2 else ''
                 
-                # Only consider students marked as absent
                 if status == 'Absent' and student_id in student_details:
                     student_name = student_details[student_id]['name']
                     parent_email = student_details[student_id]['email']
@@ -382,7 +500,6 @@ def mark_absent_students():
         mess._show(title='No Absences', message='All students are present today!')
         return
     
-    # Ask for confirmation before sending emails
     confirm = mess.askyesno(
         'Confirm Notification',
         f'Send absence notifications for {len(absent_students)} students?'
@@ -390,7 +507,6 @@ def mark_absent_students():
     if not confirm:
         return
     
-    # Send notifications
     sent_count = 0
     for student_name, parent_email in absent_students:
         try:
@@ -404,15 +520,26 @@ def mark_absent_students():
         message=f'Absence notifications sent for {sent_count} students'
     )
 
+
+# ======================
+# ATTENDANCE TRACKING
+# ======================
 def TrackImages():
+    """
+    Main attendance tracking function with new features:
+    - Unknown face detection
+    - Sound alerts
+    - Face saving
+    """
     check_haarcascadefile()
     assure_path_exists("Attendance/")
     assure_path_exists("StudentDetails/")
     
+    # Clear previous attendance data
     for k in tv.get_children():
         tv.delete(k)
     
-    # Initialize variables
+    # Initialize face recognizer
     recognizer = cv2.face.LBPHFaceRecognizer.create()
     exists3 = os.path.isfile("TrainingImageLabel/Trainner.yml")
     
@@ -422,6 +549,7 @@ def TrackImages():
         mess._show(title='Data Missing', message='Please click on Save Profile to reset data!!')
         return
     
+    # Load face detection classifier
     harcascadePath = "haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(harcascadePath)
     cam = cv2.VideoCapture(0)
@@ -431,7 +559,7 @@ def TrackImages():
     ts = time.time()
     date = datetime.datetime.fromtimestamp(ts).strftime('%d-%m-%Y')
     
-    # Read all student details
+    # Load student details
     exists1 = os.path.isfile("StudentDetails/StudentDetails.csv")
     if exists1:
         df = pd.read_csv("StudentDetails/StudentDetails.csv")
@@ -442,17 +570,17 @@ def TrackImages():
         window.destroy()
         return
     
-    # Initialize attendance_dict by loading existing attendance if available
+    # Initialize attendance dictionary
     attendance_file = f"Attendance/Attendance_{date}.csv"
     attendance_dict = {}
     
-    # If attendance file exists, load it first
+    # Load existing attendance if available
     if os.path.isfile(attendance_file):
         with open(attendance_file, 'r') as f:
             reader = csv.reader(f)
-            next(reader)  # Skip header
+            next(reader)
             for row in reader:
-                if len(row) >= 5:  # Ensure row has all columns
+                if len(row) >= 5:
                     student_id = row[0].strip()
                     attendance_dict[student_id] = {
                         'name': row[1].strip(),
@@ -461,7 +589,7 @@ def TrackImages():
                         'date': row[4].strip()
                     }
     
-    # For any students not already in attendance_dict, initialize them as Absent
+    # Initialize absent students
     for _, row in df.iterrows():
         student_id = str(row['ID']).strip()
         if student_id not in attendance_dict:
@@ -475,10 +603,15 @@ def TrackImages():
     # Column names for attendance file
     col_names = ['ID', 'Name', 'Status', 'Time', 'Date']
     
-    # Start video capture for attendance
-    start_time = time.time()
-    duration = 30  # Set duration for attendance taking (30 seconds)
+    # Create directory for unknown faces
+    unknown_faces_dir = "Unknown_Faces"
+    assure_path_exists(unknown_faces_dir)
     
+    # Attendance capture duration (30 seconds)
+    start_time = time.time()
+    duration = 30
+    
+    # Main face detection loop
     while (time.time() - start_time) < duration:
         ret, im = cam.read()
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
@@ -488,7 +621,7 @@ def TrackImages():
             cv2.rectangle(im, (x, y), (x + w, y + h), (225, 0, 0), 2)
             serial, conf = recognizer.predict(gray[y:y + h, x:x + w])
             
-            if conf < 50:
+            if conf < 50:  # Recognized face
                 ts = time.time()
                 timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
                 try:
@@ -497,30 +630,42 @@ def TrackImages():
                     ID = df.loc[df['SERIAL NO.'] == serial]['ID'].values[0]
                     ID = str(ID).strip()
                     
-                    # Update attendance dictionary only for recognized students
+                    # Update attendance
                     attendance_dict[ID]['status'] = 'Present'
                     attendance_dict[ID]['time'] = timeStamp
                     attendance_dict[ID]['date'] = date
                     
-                    # Display recognized student
+                    # Display name
                     bb = str(aa)
                     cv2.putText(im, bb, (x, y + h), font, 1, (255, 255, 255), 2)
                 except:
-                    pass  # Skip if recognition fails
-        
+                    # --- NEW FEATURE: UNKNOWN FACE HANDLING ---
+                    bb = "Unknown"
+                    cv2.putText(im, bb, (x, y + h), font, 1, (0, 0, 255), 2)
+                    cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    
+                    # Save unknown face image
+                    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                    unknown_face_path = os.path.join(unknown_faces_dir, f"unknown_{timestamp}.jpg")
+                    cv2.imwrite(unknown_face_path, gray[y:y+h, x:x+w])
+                    
+                    # Play alert sound
+                    play_alert()
+                    
+                    print(f"ALERT: Unknown face detected and saved to {unknown_face_path}")
+            
         cv2.imshow('Taking Attendance', im)
         if cv2.waitKey(1) == ord('q'):
             break
     
-    # Release camera
+    # Cleanup camera
     cam.release()
     cv2.destroyAllWindows()
     
-    # Save attendance to CSV
+    # Save attendance data
     with open(attendance_file, 'w', newline='') as csvFile1:
         writer = csv.writer(csvFile1)
         writer.writerow(col_names)
-        
         for student_id, data in attendance_dict.items():
             writer.writerow([
                 student_id,
@@ -530,33 +675,34 @@ def TrackImages():
                 data['date']
             ])
     
-    # Display attendance in the treeview
+    # Display attendance in GUI
     with open(attendance_file, 'r') as csvFile1:
         reader1 = csv.reader(csvFile1)
-        next(reader1)  # Skip header
+        next(reader1)
         for lines in reader1:
-            if len(lines) >= 5:  # Ensure we have all columns
+            if len(lines) >= 5:
                 iidd = str(lines[0]) + '   '
                 status = lines[2]
-                # Color coding based on status
                 if status == 'Present':
                     tag = 'present'
                 else:
                     tag = 'absent'
                 
                 tv.insert('', 'end', text=iidd, values=(
-                    str(lines[1]),  # Name
-                    str(lines[2]),  # Status
-                    str(lines[3]),  # Time
-                    str(lines[4])   # Date
+                    str(lines[1]),
+                    str(lines[2]),
+                    str(lines[3]),
+                    str(lines[4])
                 ), tags=(tag,))
 
-    # Configure tag colors
-    tv.tag_configure('present', background='#d4edda')  # Light green for present
-    tv.tag_configure('absent', background='#f8d7da')   # Light red for absent
+    # Configure row colors
+    tv.tag_configure('present', background='#d4edda')
+    tv.tag_configure('absent', background='#f8d7da')
 
-######################################## USED STUFFS ############################################
 
+# ======================
+# GLOBAL VARIABLES
+# ======================
 global key
 key = ''
 
@@ -570,16 +716,17 @@ mont = {
     '09': 'September', '10': 'October', '11': 'November', '12': 'December'
 }
 
-######################################## GUI FRONT-END ###########################################
 
-# Main window setup
+# ======================
+# GUI SETUP
+# ======================
 window = tk.Tk()
 window.geometry("1280x720")
 window.resizable(True, True)
 window.title("Attendance System")
 window.configure(background='#f0f2f5')
 
-# Custom font styles
+# Font styles
 title_font = ('Roboto', 30, 'bold')
 heading_font = ('Roboto', 18, 'bold')
 label_font = ('Roboto', 14)
@@ -587,26 +734,24 @@ entry_font = ('Roboto', 12)
 button_font = ('Roboto', 12, 'bold')
 
 # Color palette
-primary_color = "#4a6fa5"  # Muted blue
-secondary_color = "#166088"  # Darker blue
-accent_color = "#4fc3f7"  # Light blue
-success_color = "#66bb6a"  # Green
-warning_color = "#ffa726"  # Orange
-danger_color = "#ef5350"  # Red
-light_bg = "#ffffff"  # White
-dark_text = "#333333"  # Dark gray
-light_text = "#f5f5f5"  # Light gray
+primary_color = "#4a6fa5"
+secondary_color = "#166088"
+accent_color = "#4fc3f7"
+success_color = "#66bb6a"
+warning_color = "#ffa726"
+danger_color = "#ef5350"
+light_bg = "#ffffff"
+dark_text = "#333333"
+light_text = "#f5f5f5"
 
-# Header
+# Header section
 header = tk.Frame(window, bg=primary_color, height=80)
 header.pack(fill='x')
 
-# Title in header
 title = tk.Label(header, text="Face Recognition Based Attendance System", 
                 fg="white", bg=primary_color, font=title_font)
 title.pack(pady=20)
 
-# Time and date display
 time_date_frame = tk.Frame(header, bg=primary_color)
 time_date_frame.pack(side='right', padx=20)
 
@@ -630,7 +775,6 @@ frame1_header = tk.Label(frame1, text="For Already Registered",
                         bg=secondary_color, fg="white", font=heading_font)
 frame1_header.pack(fill='x', pady=(0, 15))
 
-# Attendance section
 lbl3 = tk.Label(frame1, text="Attendance", width=20, fg=dark_text, 
                bg=light_bg, font=heading_font)
 lbl3.pack(pady=(8, 4))
@@ -640,7 +784,6 @@ trackImg = tk.Button(frame1, text="Take Attendance", command=TrackImages,
                     font=button_font, activebackground=accent_color)
 trackImg.pack(pady=8)
 
-# Mark Absent button
 markAbsent = tk.Button(frame1, text="Mark Absent Students", command=mark_absent_students, 
                       fg="white", bg=warning_color, width=25, height=1, 
                       font=button_font, activebackground="#ffcc80")
@@ -757,13 +900,11 @@ trainImg.pack(side='left', padx=5)
 # Registration counter
 message = tk.Label(frame2)
 message.pack(side='bottom', pady=5)
-update_registration_counter()  # Initialize and display the counter
+update_registration_counter()
 
-##################### MENUBAR #################################
-
+# Menu bar
 menubar = tk.Menu(window, relief='ridge', bg=light_bg, fg=dark_text)
 
-# File menu
 filemenu = tk.Menu(menubar, tearoff=0, bg=light_bg, fg=dark_text, 
                   activebackground=accent_color, activeforeground="white")
 filemenu.add_command(label='Change Password', command=change_pass)
@@ -774,11 +915,10 @@ filemenu.add_command(label='Exit', command=window.destroy)
 menubar.add_cascade(label='Help', menu=filemenu)
 window.configure(menu=menubar)
 
-##################### END ######################################
-
-# Configure grid weights
+# Grid configuration
 content.grid_columnconfigure(0, weight=1)
 content.grid_columnconfigure(1, weight=1)
 content.grid_rowconfigure(0, weight=1)
 
+# Start main loop
 window.mainloop()
