@@ -84,6 +84,14 @@ python main.py
 
 ---
 
+## 🙏 Acknowledgements
+- [OpenCV](https://opencv.org) — For the powerful computer vision library
+- [Shields.io](https://shields.io) — For beautiful badges
+- [Capsule Render](https://github.com/kyechan99/capsule-render) — For the animated banner
+- [Haar Cascade](https://github.com/opencv/opencv/tree/master/data/haarcascades) — For the pre-trained face detection model
+
+---
+
 <div align="center">
 
 **Anurag Kumar Upadhyay**
@@ -92,6 +100,12 @@ python main.py
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AnuragKumar0429)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:akupadhaya01@gmail.com)
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=120&section=footer"/>
+<br/>
+
+**If this project helped you, please ⭐ star the repo — it means the world!**
+
+Made with ❤️ by **[Anurag Kumar Upadhyay](https://github.com/AnuragKumar0429)**
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=120&section=footer&animation=fadeIn" width="100%"/>
 
 </div>
