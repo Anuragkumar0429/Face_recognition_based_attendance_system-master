@@ -1,136 +1,97 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:667eea,50:764ba2,100:f093fb&height=200&section=header&text=👤%20FACE%20RECOGNITION%20ATTENDANCE&fontSize=50&fontColor=ffffff&fontAlignY=38&desc=Intelligent%20Attendance%20System%20with%20Facial%20Recognition&descAlignY=58&descSize=18&animation=fadeIn" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=200&section=header&text=Face%20Recognition%20Attendance%20System&fontSize=36&fontColor=ffffff&fontAlignY=38&desc=Real-Time%20Face%20Detection%20%7C%20Auto%20Attendance%20%7C%20Email%20Alerts&descAlignY=58&descSize=17&animation=fadeIn" />
+
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1000&color=A78BFA&center=true&vCenter=true&width=700&lines=Real-Time+Face+Detection+👁️;Automated+Attendance+Marking+✅;SMTP+Email+Alerts+for+Absentees+📧;Haar+Cascade+%2B+LBPH+Recognition;Tkinter+GUI+%7C+CSV+Records+%7C+Password+Protected)](https://git.io/typing-svg)
 
 <br/>
 
-<p>
-  <img src="https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge&logo=semver&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=opensourceinitiative&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PRs-Welcome-ff69b4?style=for-the-badge&logo=github&logoColor=white"/>
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Tkinter-FFD700?style=for-the-badge&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white"/>
-  <img src="https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Machine%20Learning-FF6B6B?style=for-the-badge&logo=tensorflow&logoColor=white"/>
-</p>
-
-<br/>
-
-> ### *"One Face. One Record. Zero Proxy."*
-> Face Recognition Based Attendance System automates attendance tracking using advanced facial recognition, eliminating manual entry and preventing proxy attendance in real-time.
-
-<br/>
-
-<a href="#-features">✨ Features</a> · <a href="#-tech-stack">🛠 Tech Stack</a> · <a href="#-getting-started">🚀 Get Started</a> · <a href="#-contributing">🤝 Contribute</a>
-
-<br/>
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-27338e?style=for-the-badge&logo=OpenCV&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![SMTP](https://img.shields.io/badge/SMTP-Email_Alerts-red?style=for-the-badge&logo=gmail&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)
 
 </div>
 
 ---
 
-## 🎯 Project Objective
-
-**Face Recognition Attendance System** is a smart, GUI-driven attendance management solution designed for:
-
-- 🏫 **Educational Institutions** — Schools, colleges, and universities seeking automated attendance
-- 🏢 **Corporate Offices** — Companies tracking employee presence without manual processes
-- 📚 **Training Centers** — Organizations needing efficient batch-wise attendance records
-- 🎓 **Exam Halls** — Reducing time spent on roll calls, increasing exam duration
-
-It doesn't just log names — it *recognizes*, *verifies*, and *records* with absolute accuracy.
+## 📌 Overview
+An **automated classroom attendance system** using real-time face recognition. Students are registered, model is trained using **LBPH + Haar Cascade**, and attendance is marked automatically. Unknown faces trigger a **sound alert** and absentees get **SMTP email notifications** — all via a Tkinter GUI.
 
 ---
 
-## ✨ Features
+## 🗂️ Project Structure
 
-<details>
-<summary><b>👤 1. Advanced Facial Recognition Engine</b></summary>
+```
+Face_Recognition_Attendance_System/
+├── main.py                              # 🚀 Run this
+├── haarcascade_frontalface_default.xml  # Face detection model
+├── TrainingImage/                       # Captured face samples
+├── StudentDetails/StudentDetails.csv    # Student records
+├── Attendance/                          # Daily attendance CSVs
+└── TrainingImageLabel/Trainner.yml      # Trained LBPH model
+```
 
-<br/>
+---
 
-- **LBPH Algorithm** — Local Binary Patterns Histograms for lightning-fast face matching
-- **Real-Time Detection** — Processes 30+ fps video stream without lag
-- **Multi-Face Support** — Recognizes multiple students simultaneously in crowded environments
-- **Unknown Face Handling** — Flags and logs unregistered faces with audio-visual alerts
-- **Lighting Adaptive** — Works reliably under varying lighting conditions
+## ⚙️ How It Works
 
-</details>
-
-<details>
-<summary><b>🔐 2. Secure Student Registration</b></summary>
-
-<br/>
-
-- **Password-Protected Enrollment** — Only authorized personnel can register new students
-- **Automated Face Capture** — Collects 100+ facial samples from different angles
-- **Duplicate Detection** — Prevents duplicate entries for the same student
-- **Roll Number Validation** — Integrates with existing student databases
-- **Batch Import/Export** — Bulk register students from CSV files
-
-</details>
-
-<details>
-<summary><b>📊 3. Intelligent Attendance Tracking</b></summary>
-
-<br/>
-
-- **Auto Daily Logs** — Creates new attendance CSV every morning automatically
-- **Timestamp Recording** — Captures precise entry time down to the second
-- **One-Entry-Per-Day** — Prevents duplicate attendance for the same student
-- **Real-Time Display** — Live table showing today's attendance on the main screen
-- **Absence Reports** — Auto-generates absence lists for follow-up actions
-
-</details>
-
-<details>
-<summary><b>📈 4. Comprehensive Analytics Dashboard</b></summary>
-
-<br/>
-
-After attendance sessions, view:
-
-| Metric | What It Tracks |
-|--------|----------------|
-| 📅 Daily Attendance % | Overall attendance rate for the day |
-| 📋 Student-wise Report | Individual attendance history |
-| 📉 Absence Trends | Students with chronic absenteeism |
-| ⏰ Entry Times | Average entry time, latecomers flagging |
-| 👁️ Recognition Accuracy | System confidence scores per face match |
-
-</details>
-
-<details>
-<summary><b>🎚️ 5. Flexible Configuration & Customization</b></summary>
-
-<br/>
-
-- **Adjustable Confidence Threshold** — Fine-tune recognition sensitivity
-- **Custom Attendance Rules** — Set time windows, grace periods, late marking
-- **Multi-Class Support** — Manage different batches/departments separately
-- **Export Formats** — CSV, Excel, PDF report generation
-- **Backup & Recovery** — Auto-backup attendance data to prevent data loss
-
-</details>
+```
+Register Student → Capture 100+ Images → Train LBPH Model
+       ↓
+Start Attendance → Webcam detects faces in real-time
+       ↓
+Face Recognized?  ✅ YES → Mark Present  |  ❌ NO → Sound Alert
+       ↓
+Session Ends → Absentees notified via Email (SMTP)
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **GUI Framework** | Tkinter | Cross-platform user interface |
-| **Computer Vision** | OpenCV + OpenCV-Contrib | Face detection & recognition |
-| **ML Algorithm** | LBPH Face Recognizer | Facial pattern matching |
-| **Data Processing** | Pandas, NumPy | Attendance records & analytics |
-| **Image Processing** | Pillow (PIL) | Photo manipulation & storage |
-| **Data Storage** | CSV Files | Lightweight, portable records |
-| **Language** | Python 3.7+ | Fast, readable, maintainable code |
+| Component | Technology |
+|-----------|-----------|
+| Face Detection | Haar Cascade Classifier |
+| Face Recognition | LBPH Algorithm |
+| GUI | Tkinter + ttk |
+| Data Handling | Pandas, CSV |
+| Email Alerts | smtplib, MIME |
+| Image Processing | OpenCV, Pillow, NumPy |
 
-## 🏗️ System Architecture
+---
+
+## ⚡ Quick Start
+
+```bash
+git clone https://github.com/AnuragKumar0429/Face_Recognition_Attendance_System.git
+cd Face_Recognition_Attendance_System
+pip install opencv-contrib-python numpy pandas pillow
+python main.py
+```
+
+---
+
+## ✅ Features
+- ✓ Real-time face detection & LBPH recognition
+- ✓ Auto-captures 100+ training images per student
+- ✓ Attendance saved with date & timestamp to CSV
+- ✓ SMTP email alerts for absentees
+- ✓ Sound alert for unknown faces
+- ✓ Password-protected admin panel
+- ✓ Cross-platform (Windows / Linux / macOS)
+
+---
+
+<div align="center">
+
+**Anurag Kumar Upadhyay**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anurag-kumar-upadhyay-9a2105285/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AnuragKumar0429)
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:akupadhaya01@gmail.com)
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:24243e,50:302b63,100:0f0c29&height=120&section=footer"/>
+
+</div>
